@@ -24,5 +24,13 @@ namespace MQSender.Net
         {
             InitializeComponent();
         }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            MQService mqSrv = new MQService();
+            mqSrv.Init();
+
+            MessageBox.Show("连接成功！"); 
+        }
     }
 }
