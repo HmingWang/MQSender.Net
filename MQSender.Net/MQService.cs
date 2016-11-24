@@ -10,14 +10,34 @@ namespace MQSender.Net
 {
     class MQService
     {
-        private MQQueueManager m_Qmgr;
+        private MQQueueManager mqQMgr;
+        private MQQueue mqQueue;
+        private MQMessage mqMsg;
+        private MQPutMessageOptions mqPutMsgOpts;    // MQPutMessageOptions instance
+        private MQGetMessageOptions mqGetMsgOpts;    // MQGetMessageOptions instance
         public void Init()
         {
             MQEnvironment.Hostname = "127.0.0.1";
             MQEnvironment.Port = 1414;
             MQEnvironment.Channel = "SVRCONN";
 
-            m_Qmgr = new MQQueueManager("QMCENTER");
+            mqQMgr = new MQQueueManager("QMCENTER");
+
+            mqQueue = mqQMgr.AccessQueue("TESTQ_1", MQC.MQOO_OUTPUT | MQC.MQOO_INPUT_SHARED | MQC.MQOO_INQUIRE);
+
+            mqMsg = new MQMessage();
+            mqMsg.WriteString("Hello world");
+            mqMsg.Format = MQC.MQFMT_STRING;
+            mqPutMsgOpts = new MQPutMessageOptions();
+
+
+            mqQueue.Put(mqMsg, mqPutMsgOpts);
+
+            mqGetMsgOpts = new MQGetMessageOptions();
+
+            //mqQueue.Get(mqMsg, mqGetMsgOpts);
+
+            System.Console.WriteLine(mqMsg.ReadString(mqMsg.MessageLength));
         }
     }
 }
