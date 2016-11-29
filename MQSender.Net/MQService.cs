@@ -17,6 +17,7 @@ namespace MQSender.Net
         private MQGetMessageOptions mqGetMsgOpts;    // MQGetMessageOptions instance
         public void Init()
         {
+            Environment.SetEnvironmentVariable("MQCCSID", "819");
             MQEnvironment.Hostname = "127.0.0.1";
             MQEnvironment.Port = 1414;
             MQEnvironment.Channel = "SVRCONN";
@@ -35,7 +36,7 @@ namespace MQSender.Net
 
             mqGetMsgOpts = new MQGetMessageOptions();
 
-            //mqQueue.Get(mqMsg, mqGetMsgOpts);
+            mqQueue.Get(mqMsg, mqGetMsgOpts);
 
             System.Console.WriteLine(mqMsg.ReadString(mqMsg.MessageLength));
         }
