@@ -15,30 +15,63 @@ namespace MQSender.Net
         private MQMessage mqMsg;
         private MQPutMessageOptions mqPutMsgOpts;    // MQPutMessageOptions instance
         private MQGetMessageOptions mqGetMsgOpts;    // MQGetMessageOptions instance
+
+        private string mqccsid;        
+        private string hostname;        
+        private int    port;        
+        private string channel;
+        private string userid;
+        private string queuename;
+        private string qmgrname;
+        
+        public string MQCCSID   { set { mqccsid = value; } }
+        public string Hostname  { set { hostname = value; } }
+        public int    Port      { set { port = value; } }
+        public string Channel   { set { channel = value; } }
+        public string UserId    { set { userid = value; } }
+        public string QueueName     { set { queuename = value; } }
+        public string QmgrName    { set { qmgrname = value; } }
+
         public void Init()
         {
-            Environment.SetEnvironmentVariable("MQCCSID", "819");
-            MQEnvironment.Hostname = "127.0.0.1";
-            MQEnvironment.Port = 1414;
-            MQEnvironment.Channel = "SVRCONN";
+            Environment.SetEnvironmentVariable("MQCCSID", mqccsid);
+            MQEnvironment.Hostname = hostname;
+            MQEnvironment.Port = port;
+            MQEnvironment.Channel = channel;
+            //MQEnvironment.UserId = userid;
 
-            mqQMgr = new MQQueueManager("QMCENTER");
+            try
+            {
+                mqQMgr = new MQQueueManager(qmgrname);
+                mqQueue = mqQMgr.AccessQueue(queuename, MQC.MQOO_OUTPUT | MQC.MQOO_INPUT_SHARED | MQC.MQOO_INQUIRE);
+            }
+            catch (MQException e)
+            {
+                System.Console.WriteLine(e.Message);
+                throw new AppException("(" + e.ReasonCode + ")" + e.Message);
+            }
+        }
 
-            mqQueue = mqQMgr.AccessQueue("TESTQ_1", MQC.MQOO_OUTPUT | MQC.MQOO_INPUT_SHARED | MQC.MQOO_INQUIRE);
-
+        public void PutMessage(string msg)
+        {
             mqMsg = new MQMessage();
-            mqMsg.WriteString("Hello world");
+            mqMsg.WriteString(msg);
             mqMsg.Format = MQC.MQFMT_STRING;
             mqPutMsgOpts = new MQPutMessageOptions();
 
-
             mqQueue.Put(mqMsg, mqPutMsgOpts);
-
-            mqGetMsgOpts = new MQGetMessageOptions();
-
-            mqQueue.Get(mqMsg, mqGetMsgOpts);
-
-            System.Console.WriteLine(mqMsg.ReadString(mqMsg.MessageLength));
         }
+        public void GetMessage(out string msg)
+        {
+            mqGetMsgOpts = new MQGetMessageOptions();
+            mqQueue.Get(mqMsg, mqGetMsgOpts);
+            msg = mqMsg.ReadString(mqMsg.MessageLength);
+        }
+    }
+
+    class AppException : ApplicationException
+    {
+        public AppException() : base() { }
+        public AppException(String msg) : base(msg) { }
     }
 }
