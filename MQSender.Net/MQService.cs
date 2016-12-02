@@ -38,7 +38,7 @@ namespace MQSender.Net
             MQEnvironment.Hostname = hostname;
             MQEnvironment.Port = port;
             MQEnvironment.Channel = channel;
-            //MQEnvironment.UserId = userid;
+            MQEnvironment.UserId = string.IsNullOrEmpty(userid) ? null : userid; 
 
             try
             {
@@ -52,10 +52,10 @@ namespace MQSender.Net
             }
         }
 
-        public void PutMessage(string msg)
+        public void PutMessage(object msg)
         {
             mqMsg = new MQMessage();
-            mqMsg.WriteString(msg);
+            mqMsg.WriteObject(msg);
             mqMsg.Format = MQC.MQFMT_STRING;
             mqPutMsgOpts = new MQPutMessageOptions();
 

@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using System.Resources;
-
+using System.IO;
 
 namespace MQSender.Net
 {
@@ -64,23 +64,82 @@ namespace MQSender.Net
             MessageBox.Show(msg);
         }
 
-        private void button3_Click(object sender, RoutedEventArgs e)
+        private void SaveResource()
         {
             ResourceWriter rw = new ResourceWriter("Resources.resx");
             rw.AddResource("strHostName", this.tbxHostName.Text);
+            rw.AddResource("strPort",this.tbxPort.Text);
+            rw.AddResource("strCCSID", this.tbxCCSID.Text);
+            rw.AddResource("strChannel", this.tbxChannel.Text);
+            rw.AddResource("strUserId", this.tbxUserId.Text);
+            rw.AddResource("strQmgrName", this.tbxQmgrName.Text);
+            rw.AddResource("strQueueName", this.tbxQueueName.Text);
             rw.Generate();
             rw.Close();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void LoadResource()
         {
             ResourceReader rr = new ResourceReader("Resources.resx");
             string type;
-            byte[] data;
-            rr.GetResourceData("strHostName", out type, out data);
-
-            this.tbxHostName.Text = System.Text.Encoding.Default.GetString(data);
+            byte[] byteHostName,bytePort,byteCCSID,byteChannel,byteUserId,byteQmgrName,byteQueueName;
+            rr.GetResourceData("strHostName", out type, out byteHostName);
+            rr.GetResourceData("strPort", out type, out bytePort);
+            rr.GetResourceData("strCCSID", out type, out byteCCSID);
+            rr.GetResourceData("strChannel", out type, out byteChannel);
+            rr.GetResourceData("strUserId", out type, out byteUserId);
+            rr.GetResourceData("strQmgrName", out type, out byteQmgrName);
+            rr.GetResourceData("strQueueName", out type, out byteQueueName);
             rr.Close();
+
+            this.tbxHostName.Text = new BinaryReader(new MemoryStream(byteHostName)).ReadString();
+            this.tbxPort.Text = new BinaryReader(new MemoryStream(bytePort)).ReadString();
+            this.tbxCCSID.Text = new BinaryReader(new MemoryStream(byteCCSID)).ReadString();
+            this.tbxChannel.Text = new BinaryReader(new MemoryStream(byteChannel)).ReadString();
+            this.tbxUserId.Text = new BinaryReader(new MemoryStream(byteUserId)).ReadString();
+            this.tbxQmgrName.Text = new BinaryReader(new MemoryStream(byteQmgrName)).ReadString();
+            this.tbxQueueName.Text = new BinaryReader(new MemoryStream(byteQueueName)).ReadString();
+        }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            SaveResource();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadResource();
+        }
+
+        private void button4_Click(object sender, RoutedEventArgs e)
+        {
+            LoadResource();
+        }
+
+        private void button6_Click(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists(this.tbxFileName.Text))
+            {
+                MessageBox.Show("文件不存在！");
+                return;
+            }
+
+            FileStream fs = File.OpenRead(this.tbxFileName.Text);
+            byte[] byteMessage = new Byte[fs.Length];
+            fs.Read(byteMessage, 0,(int)fs.Length);
+            mqSrv.PutMessage(Encoding.GetEncoding("UTF-8").GetString(byteMessage));
+            MessageBox.Show("发送成功！");
+        }
+
+        private void button5_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            //dialog.Filter = "SQLite数据库文件|*.db";
+
+            if (dialog.ShowDialog() == true)
+            {
+                this.tbxFileName.Text = dialog.FileName;
+            }
         }
     }
 }
