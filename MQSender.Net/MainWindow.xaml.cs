@@ -30,7 +30,8 @@ namespace MQSender.Net
         private MQService mqSrv;
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            mqSrv = new MQService();
+            if (mqSrv == null)
+                mqSrv = new MQService();
 
             mqSrv.Hostname = this.tbxHostName.Text;
             mqSrv.Port = int.Parse(this.tbxPort.Text);
@@ -53,15 +54,29 @@ namespace MQSender.Net
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            mqSrv.PutMessage(this.tbxMsg.Text);
+            try
+            {
+                mqSrv.PutMessage(this.tbxMsg.Text);
+                MessageBox.Show("发生成功");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("发送失败！" + ex.Message);
+            }
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
             string msg;
-            mqSrv.GetMessage(out msg);
-
-            MessageBox.Show(msg);
+            try
+            {
+                mqSrv.GetMessage(out msg);
+                MessageBox.Show(msg);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void SaveResource()
@@ -80,25 +95,43 @@ namespace MQSender.Net
 
         private void LoadResource()
         {
-            ResourceReader rr = new ResourceReader("Resources.resx");
-            string type;
-            byte[] byteHostName,bytePort,byteCCSID,byteChannel,byteUserId,byteQmgrName,byteQueueName;
-            rr.GetResourceData("strHostName", out type, out byteHostName);
-            rr.GetResourceData("strPort", out type, out bytePort);
-            rr.GetResourceData("strCCSID", out type, out byteCCSID);
-            rr.GetResourceData("strChannel", out type, out byteChannel);
-            rr.GetResourceData("strUserId", out type, out byteUserId);
-            rr.GetResourceData("strQmgrName", out type, out byteQmgrName);
-            rr.GetResourceData("strQueueName", out type, out byteQueueName);
-            rr.Close();
+            try
+            {
+                ResourceReader rr = new ResourceReader("Resources.resx");
+                string type;
+                byte[] byteHostName, bytePort, byteCCSID, byteChannel, byteUserId, byteQmgrName, byteQueueName;
+                rr.GetResourceData("strHostName", out type, out byteHostName);
+                rr.GetResourceData("strPort", out type, out bytePort);
+                rr.GetResourceData("strCCSID", out type, out byteCCSID);
+                rr.GetResourceData("strChannel", out type, out byteChannel);
+                rr.GetResourceData("strUserId", out type, out byteUserId);
+                rr.GetResourceData("strQmgrName", out type, out byteQmgrName);
+                rr.GetResourceData("strQueueName", out type, out byteQueueName);
+                rr.Close();
 
-            this.tbxHostName.Text = new BinaryReader(new MemoryStream(byteHostName)).ReadString();
-            this.tbxPort.Text = new BinaryReader(new MemoryStream(bytePort)).ReadString();
-            this.tbxCCSID.Text = new BinaryReader(new MemoryStream(byteCCSID)).ReadString();
-            this.tbxChannel.Text = new BinaryReader(new MemoryStream(byteChannel)).ReadString();
-            this.tbxUserId.Text = new BinaryReader(new MemoryStream(byteUserId)).ReadString();
-            this.tbxQmgrName.Text = new BinaryReader(new MemoryStream(byteQmgrName)).ReadString();
-            this.tbxQueueName.Text = new BinaryReader(new MemoryStream(byteQueueName)).ReadString();
+                this.tbxHostName.Text = new BinaryReader(new MemoryStream(byteHostName)).ReadString();
+                this.tbxPort.Text = new BinaryReader(new MemoryStream(bytePort)).ReadString();
+                this.tbxCCSID.Text = new BinaryReader(new MemoryStream(byteCCSID)).ReadString();
+                this.tbxChannel.Text = new BinaryReader(new MemoryStream(byteChannel)).ReadString();
+                this.tbxUserId.Text = new BinaryReader(new MemoryStream(byteUserId)).ReadString();
+                this.tbxQmgrName.Text = new BinaryReader(new MemoryStream(byteQmgrName)).ReadString();
+                this.tbxQueueName.Text = new BinaryReader(new MemoryStream(byteQueueName)).ReadString();
+
+                if(mqSrv==null)
+                    mqSrv = new MQService();
+
+                mqSrv.Hostname = this.tbxHostName.Text;
+                mqSrv.Port = int.Parse(this.tbxPort.Text);
+                mqSrv.MQCCSID = this.tbxCCSID.Text;
+                mqSrv.Channel = this.tbxChannel.Text;
+                mqSrv.UserId = this.tbxUserId.Text;
+                mqSrv.QmgrName = this.tbxQmgrName.Text;
+                mqSrv.QueueName = this.tbxQueueName.Text;
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
 
         private void button3_Click(object sender, RoutedEventArgs e)

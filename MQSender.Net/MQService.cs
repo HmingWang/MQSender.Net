@@ -15,7 +15,7 @@ namespace MQSender.Net
         private MQMessage mqMsg;
         private MQPutMessageOptions mqPutMsgOpts;    // MQPutMessageOptions instance
         private MQGetMessageOptions mqGetMsgOpts;    // MQGetMessageOptions instance
-
+        private bool isConnected=false;
         private string mqccsid;        
         private string hostname;        
         private int    port;        
@@ -40,22 +40,19 @@ namespace MQSender.Net
             MQEnvironment.Channel = channel;
             MQEnvironment.UserId = string.IsNullOrEmpty(userid) ? null : userid; 
 
-            try
-            {
-                mqQMgr = new MQQueueManager(qmgrname);
-                mqQueue = mqQMgr.AccessQueue(queuename, MQC.MQOO_OUTPUT | MQC.MQOO_INPUT_SHARED | MQC.MQOO_INQUIRE);
-            }
-            catch (MQException e)
-            {
-                System.Console.WriteLine(e.Message);
-                throw new AppException("(" + e.ReasonCode + ")" + e.Message);
-            }
+            mqQMgr = new MQQueueManager(qmgrname);
+            mqQueue = mqQMgr.AccessQueue(queuename, MQC.MQOO_OUTPUT | MQC.MQOO_INPUT_SHARED | MQC.MQOO_INQUIRE);
+            isConnected = true;
         }
 
-        public void PutMessage(object msg)
+        public void PutMessage(string msg)
         {
+            if (!isConnected)
+            {
+                Init();
+            }
             mqMsg = new MQMessage();
-            mqMsg.WriteObject(msg);
+            mqMsg.WriteString(msg);
             mqMsg.Format = MQC.MQFMT_STRING;
             mqPutMsgOpts = new MQPutMessageOptions();
 
@@ -63,15 +60,13 @@ namespace MQSender.Net
         }
         public void GetMessage(out string msg)
         {
+            if (!isConnected)
+            {
+                Init();
+            }
             mqGetMsgOpts = new MQGetMessageOptions();
             mqQueue.Get(mqMsg, mqGetMsgOpts);
             msg = mqMsg.ReadString(mqMsg.MessageLength);
         }
-    }
-
-    class AppException : ApplicationException
-    {
-        public AppException() : base() { }
-        public AppException(String msg) : base(msg) { }
     }
 }
