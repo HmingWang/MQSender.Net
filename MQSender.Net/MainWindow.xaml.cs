@@ -72,6 +72,7 @@ namespace MQSender.Net
             {
                 mqSrv.GetMessage(out msg);
                 MessageBox.Show(msg);
+                Console.Out.WriteLineAsync(msg);
             }
             catch (Exception ex)
             {
