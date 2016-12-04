@@ -160,7 +160,7 @@ namespace MQSender.Net
             FileStream fs = File.OpenRead(this.tbxFileName.Text);
             byte[] byteMessage = new Byte[fs.Length];
             fs.Read(byteMessage, 0,(int)fs.Length);
-            mqSrv.PutMessage(Encoding.GetEncoding("UTF-8").GetString(byteMessage));
+            mqSrv.PutMessage(Encoding.Default.GetString(byteMessage));
             MessageBox.Show("发送成功！");
         }
 
@@ -172,6 +172,17 @@ namespace MQSender.Net
             if (dialog.ShowDialog() == true)
             {
                 this.tbxFileName.Text = dialog.FileName;
+            }
+        }
+
+        private void button7_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.Filter = "PFX文件|*.pfx";
+
+            if (dialog.ShowDialog() == true)
+            {
+                this.tbxPfxPath.Text = dialog.FileName;
             }
         }
     }

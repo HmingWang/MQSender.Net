@@ -14,10 +14,15 @@ namespace MQSender.Net
 {
     class Signature
     {
-        private string certFilePaht;
+        private string certFilePath;
+        public Signature(string filePath)
+        {
+            certFilePath = filePath;
+        }
+
         public string HashAndSign(string plainText)
         {
-            X509Certificate2 x509Certificate2 = new X509Certificate2(certFilePaht);
+            X509Certificate2 x509Certificate2 = new X509Certificate2(certFilePath);
             UnicodeEncoding ByteConverter = new UnicodeEncoding();
             //将明文转byte[]
             byte[] dataToEncrypt = ByteConverter.GetBytes(plainText);
@@ -35,7 +40,7 @@ namespace MQSender.Net
         public bool VerifySigned(string plaintext, string signedData)
         {
             //根据证书友好名称查找证书
-            X509Certificate2 x509Certificate2 = new X509Certificate2(certFilePaht);
+            X509Certificate2 x509Certificate2 = new X509Certificate2(certFilePath);
 
             //将证书公钥转为rsa对象
             RSACryptoServiceProvider RSAalg = x509Certificate2.PublicKey.Key as RSACryptoServiceProvider;
