@@ -28,6 +28,7 @@ namespace MQSender.Net
             InitializeComponent();
         }
         private MQService mqSrv;
+        private Signature signature;
         private void button_Click(object sender, RoutedEventArgs e)
         {
             if (mqSrv == null)
@@ -83,13 +84,19 @@ namespace MQSender.Net
         private void SaveResource()
         {
             ResourceWriter rw = new ResourceWriter("Resources.resx");
-            rw.AddResource("strHostName", this.tbxHostName.Text);
-            rw.AddResource("strPort",this.tbxPort.Text);
-            rw.AddResource("strCCSID", this.tbxCCSID.Text);
-            rw.AddResource("strChannel", this.tbxChannel.Text);
-            rw.AddResource("strUserId", this.tbxUserId.Text);
-            rw.AddResource("strQmgrName", this.tbxQmgrName.Text);
-            rw.AddResource("strQueueName", this.tbxQueueName.Text);
+            rw.AddResource("HostName", this.tbxHostName.Text);
+            rw.AddResource("Port",this.tbxPort.Text);
+            rw.AddResource("CCSID", this.tbxCCSID.Text);
+            rw.AddResource("Channel", this.tbxChannel.Text);
+            rw.AddResource("UserId", this.tbxUserId.Text);
+            rw.AddResource("QmgrName", this.tbxQmgrName.Text);
+            rw.AddResource("QueueName", this.tbxQueueName.Text);
+            rw.AddResource("KeyPath", this.tbxKeyPath.Text);
+            rw.AddResource("CertPath", this.tbxCrtPath.Text);
+            rw.AddResource("Password", this.tbxPwd.Text);
+            rw.AddResource("SignOffset", this.tbxSignOffset.Text);
+            rw.AddResource("SignLength", this.tbxSignLength.Text);
+            rw.AddResource("VerifyOffset", this.tbxVerifyOffset.Text);
             rw.Generate();
             rw.Close();
         }
@@ -100,23 +107,34 @@ namespace MQSender.Net
             {
                 ResourceReader rr = new ResourceReader("Resources.resx");
                 string type;
-                byte[] byteHostName, bytePort, byteCCSID, byteChannel, byteUserId, byteQmgrName, byteQueueName;
-                rr.GetResourceData("strHostName", out type, out byteHostName);
-                rr.GetResourceData("strPort", out type, out bytePort);
-                rr.GetResourceData("strCCSID", out type, out byteCCSID);
-                rr.GetResourceData("strChannel", out type, out byteChannel);
-                rr.GetResourceData("strUserId", out type, out byteUserId);
-                rr.GetResourceData("strQmgrName", out type, out byteQmgrName);
-                rr.GetResourceData("strQueueName", out type, out byteQueueName);
+                byte[] byteTmp;
+                rr.GetResourceData("HostName", out type, out byteTmp);
+                this.tbxHostName.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("Port", out type, out byteTmp);
+                this.tbxPort.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("CCSID", out type, out byteTmp);
+                this.tbxCCSID.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("Channel", out type, out byteTmp);
+                this.tbxChannel.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("UserId", out type, out byteTmp);
+                this.tbxUserId.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("QmgrName", out type, out byteTmp);
+                this.tbxQmgrName.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("QueueName", out type, out byteTmp);
+                this.tbxQueueName.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("KeyPath", out type, out byteTmp);
+                this.tbxKeyPath.Text= new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("CertPath", out type, out byteTmp);
+                this.tbxCrtPath.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("Password", out type, out byteTmp);
+                this.tbxPwd.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("SignOffset", out type, out byteTmp);
+                this.tbxSignOffset.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("SignLength", out type, out byteTmp);
+                this.tbxSignLength.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("VerifyOffset", out type, out byteTmp);
+                this.tbxVerifyOffset.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
                 rr.Close();
-
-                this.tbxHostName.Text = new BinaryReader(new MemoryStream(byteHostName)).ReadString();
-                this.tbxPort.Text = new BinaryReader(new MemoryStream(bytePort)).ReadString();
-                this.tbxCCSID.Text = new BinaryReader(new MemoryStream(byteCCSID)).ReadString();
-                this.tbxChannel.Text = new BinaryReader(new MemoryStream(byteChannel)).ReadString();
-                this.tbxUserId.Text = new BinaryReader(new MemoryStream(byteUserId)).ReadString();
-                this.tbxQmgrName.Text = new BinaryReader(new MemoryStream(byteQmgrName)).ReadString();
-                this.tbxQueueName.Text = new BinaryReader(new MemoryStream(byteQueueName)).ReadString();
 
                 if(mqSrv==null)
                     mqSrv = new MQService();
@@ -183,7 +201,68 @@ namespace MQSender.Net
 
             if (dialog.ShowDialog() == true)
             {
-                this.tbxPfxPath.Text = dialog.FileName;
+                this.tbxKeyPath.Text = dialog.FileName;
+            }
+        }
+
+        private void button11_Click(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists(this.tbxKeyPath.Text))
+            {
+                MessageBox.Show("私钥文件不存在");
+                return;
+            }
+            if (!File.Exists(this.tbxCrtPath.Text))
+            {
+                MessageBox.Show("证书文件不存在");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(this.tbxPwd.Text))
+            {
+                MessageBox.Show("请输入密码");
+                return;
+            }
+
+            signature = new Signature(this.tbxCrtPath.Text, this.tbxKeyPath.Text, this.tbxPwd.Text);
+            MessageBox.Show("绑定成功！");
+        }
+
+        private void button8_Click(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists(this.tbxFileName.Text))
+            {
+                MessageBox.Show("文件不存在！");
+                return;
+            }
+
+            if (String.IsNullOrEmpty(this.tbxSignLength.Text) || String.IsNullOrEmpty(this.tbxSignOffset.Text) || String.IsNullOrEmpty(this.tbxVerifyOffset.Text))
+            {
+                MessageBox.Show("请填写加核签偏移值相关字段");
+                return;
+            }
+
+
+            string fileText = File.ReadAllText(this.tbxFileName.Text);
+
+            string sign = signature.HashAndSign(fileText);
+            
+            string tmp=fileText.Insert(int.Parse(this.tbxSignOffset.Text), sign);            
+
+            File.WriteAllText(this.tbxFileName.Text, tmp);
+
+            MessageBox.Show("加签成功");
+            
+        }
+
+        private void button10_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            //dialog.Filter = "PFX文件|*.pfx";
+
+            if (dialog.ShowDialog() == true)
+            {
+                this.tbxCrtPath.Text = dialog.FileName;
             }
         }
     }
