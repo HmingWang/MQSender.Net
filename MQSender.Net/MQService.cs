@@ -65,6 +65,12 @@ namespace MQSender.Net
                 Init();
             }
             mqGetMsgOpts = new MQGetMessageOptions();
+            mqGetMsgOpts.Options = mqGetMsgOpts.Options + MQC.MQGMO_SYNCPOINT;//Get messages under sync point control（在同步点控制下获取消息）   
+            mqGetMsgOpts.Options = mqGetMsgOpts.Options + MQC.MQGMO_WAIT;  // Wait if no messages on the Queue（如果在队列上没有消息则等待）   
+            mqGetMsgOpts.Options = mqGetMsgOpts.Options + MQC.MQGMO_FAIL_IF_QUIESCING;// Fail if Qeue Manager Quiescing（如果队列管理器停顿则失败）   
+            mqGetMsgOpts.WaitInterval = 1000;
+            
+            mqQueue = mqQMgr.AccessQueue(queuename, MQC.MQOO_INPUT_AS_Q_DEF | MQC.MQOO_OUTPUT);
             mqQueue.Get(mqMsg, mqGetMsgOpts);
             msg = mqMsg.ReadString(mqMsg.MessageLength);
         }

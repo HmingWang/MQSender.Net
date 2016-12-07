@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MQSender.Net"
         mc:Ignorable="d"
-        Title="MainWindow" Height="407.019" Width="534.013" Loaded="Window_Loaded" ResizeMode="NoResize">
+        Title="MainWindow" Height="407.019" Width="702.68" Loaded="Window_Loaded" ResizeMode="NoResize">
     <Grid>
         <Button x:Name="button" Content="测试连接" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
         <Label x:Name="label" Content="IP地址" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
@@ -33,10 +33,10 @@
         <Button x:Name="button6" Content="发送" HorizontalAlignment="Left" Margin="404,128,0,0" VerticalAlignment="Top" Width="75" Click="button6_Click"/>
         <Button x:Name="button5" Content="浏览..." HorizontalAlignment="Left" Margin="324,128,0,0" VerticalAlignment="Top" Width="75" Click="button5_Click"/>
         <Label x:Name="label9" Content="PFX文件" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="tbxKeyPath" HorizontalAlignment="Left" Height="23" Margin="73,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217"/>
+        <TextBox x:Name="tbxKeyPath" HorizontalAlignment="Left" Height="23" Margin="73,154,0,0"  Text="" VerticalAlignment="Top" Width="217" />
         <Button x:Name="button7" Content="浏览..." HorizontalAlignment="Left" Margin="296,156,0,0" VerticalAlignment="Top" Width="75" Click="button7_Click"/>
         <Button x:Name="button8" Content="加签" HorizontalAlignment="Left" Margin="10,221,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click"/>
-        <Button x:Name="button9" Content="验签" HorizontalAlignment="Left" Margin="92,221,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="button9" Content="验签" HorizontalAlignment="Left" Margin="92,221,0,0" VerticalAlignment="Top" Width="75" Click="button9_Click"/>
         <Label x:Name="label10" Content="签名起始位" HorizontalAlignment="Left" Margin="10,248,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxSignOffset" HorizontalAlignment="Left" Height="23" Margin="80,250,0,0"  Text="" VerticalAlignment="Top" Width="24"/>
         <Label x:Name="label11" Content="签名长度" HorizontalAlignment="Left" Margin="109,250,0,0" VerticalAlignment="Top"/>
@@ -44,12 +44,12 @@
         <Label x:Name="label12" Content="验签起始位" HorizontalAlignment="Left" Margin="211,250,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxVerifyOffset" HorizontalAlignment="Left" Height="23" Margin="286,251,0,0"  Text="" VerticalAlignment="Top" Width="33"/>
         <Label x:Name="label14" Content="发送次数" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox4" HorizontalAlignment="Left" Height="23" Margin="73,287,0,0"  Text="" VerticalAlignment="Top" Width="56"/>
+        <TextBox x:Name="tbxSendCount" HorizontalAlignment="Left" Height="23" Margin="73,287,0,0"  Text="" VerticalAlignment="Top" Width="56"/>
         <Label x:Name="label15" Content="替换序号字符串" HorizontalAlignment="Left" Margin="140,285,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox5" HorizontalAlignment="Left" Height="23" Margin="234,287,0,0"  Text="" VerticalAlignment="Top" Width="74"/>
+        <TextBox x:Name="tbxNumString" HorizontalAlignment="Left" Height="23" Margin="234,287,0,0"  Text="" VerticalAlignment="Top" Width="74"/>
         <Label x:Name="label16" Content="起始序号" HorizontalAlignment="Left" Margin="313,287,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox7" HorizontalAlignment="Left" Height="23" Margin="376,287,0,0"  Text="" VerticalAlignment="Top" Width="120"/>
-        <ProgressBar HorizontalAlignment="Left" Height="10" Margin="73,325,0,0" VerticalAlignment="Top" Width="394" Value="12"/>
+        <TextBox x:Name="tbxStartNum" HorizontalAlignment="Left" Height="23" Margin="376,287,0,0"  Text="" VerticalAlignment="Top" Width="120"/>
+        <ProgressBar x:Name="prbSendProgress" HorizontalAlignment="Left" Height="10" Margin="73,325,0,0" VerticalAlignment="Top" Width="394" Value="12"/>
         <Label x:Name="label17" Content="发送进度" HorizontalAlignment="Left" Margin="10,317,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label18" Content="100%" HorizontalAlignment="Left" Margin="472,317,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label19" Content="数字证书" HorizontalAlignment="Left" Margin="10,182,0,0" VerticalAlignment="Top"/>
@@ -58,6 +58,10 @@
         <Button x:Name="button11" Content="绑定" HorizontalAlignment="Left" Margin="404,185,0,0" VerticalAlignment="Top" Width="75" Click="button11_Click"/>
         <Label x:Name="label20" Content="密码" HorizontalAlignment="Left" Margin="376,154,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxPwd" HorizontalAlignment="Left" Height="23" Margin="415,155,0,0"  Text="" VerticalAlignment="Top" Width="75"/>
+        <Label x:Name="label13" Content="使用说明：&#xD;&#xA;签名起始位置：165&#xD;&#xA;签名长度：640&#xD;&#xA;验签起始位置：808" HorizontalAlignment="Left" Margin="559,26,0,0" VerticalAlignment="Top" Height="309" Width="117" Foreground="#FF1BB21B"/>
+        <Label x:Name="lblCurNum" Content="当前序号" HorizontalAlignment="Left" Margin="458,251,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblCurNum_Copy" Content="当前序号" HorizontalAlignment="Left" Margin="386,251,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button12" Content="批量发送" HorizontalAlignment="Left" Margin="224,221,0,0" VerticalAlignment="Top" Width="75" Click="button12_Click"/>
 
     </Grid>
 </Window>

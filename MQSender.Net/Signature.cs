@@ -37,7 +37,8 @@ namespace MQSender.Net
             byte[] encryptedData = RSAalg.SignData(dataToEncrypt, new SHA1CryptoServiceProvider());
             //得到签名
             //string signStr = Convert.ToBase64String(encryptedData);
-            string signStr = BytesToHexString(encryptedData);
+            //string signStr = BytesToHexString(encryptedData);
+            string signStr = BitConverter.ToString(encryptedData).Replace("-","").ToLower();
             RSAalg.Clear();
             RSAalg.Dispose();
             return signStr;
@@ -54,7 +55,8 @@ namespace MQSender.Net
             //将明文转byte[]
             byte[] dataToVerifyBytes = ByteConverter.GetBytes(plaintext);
             //将签名转byte[]
-            byte[] signedDataBytes = Convert.FromBase64String(signedData);
+            //byte[] signedDataBytes = Convert.FromBase64String(signedData);
+            byte[] signedDataBytes = HexStringToBytes(signedData);
             //验证签名
             bool isSuccess = RSAalg.VerifyData(dataToVerifyBytes, new SHA1CryptoServiceProvider(), signedDataBytes);
             RSAalg.Clear();
@@ -71,6 +73,16 @@ namespace MQSender.Net
             }
 
             return sb.ToString();
+        }
+
+        public byte[] HexStringToBytes(string hexString)
+        {
+            byte[] result = new byte[hexString.Length / 2];
+            for (int i=0;i<hexString.Length;i+=2)
+            {
+                result[i / 2] = (byte)Convert.ToByte(hexString.Substring(i, 2), 16);
+            }
+            return result;
         }
     }
 }

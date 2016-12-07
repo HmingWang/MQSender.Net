@@ -97,6 +97,9 @@ namespace MQSender.Net
             rw.AddResource("SignOffset", this.tbxSignOffset.Text);
             rw.AddResource("SignLength", this.tbxSignLength.Text);
             rw.AddResource("VerifyOffset", this.tbxVerifyOffset.Text);
+            rw.AddResource("SendCount", this.tbxSendCount.Text);
+            rw.AddResource("NumString", this.tbxNumString.Text);
+            rw.AddResource("StartNum", this.tbxStartNum.Text);
             rw.Generate();
             rw.Close();
         }
@@ -134,6 +137,12 @@ namespace MQSender.Net
                 this.tbxSignLength.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
                 rr.GetResourceData("VerifyOffset", out type, out byteTmp);
                 this.tbxVerifyOffset.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("SendCount", out type, out byteTmp);
+                this.tbxSendCount.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("NumString", out type, out byteTmp);
+                this.tbxNumString.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("StartNum", out type, out byteTmp);
+                this.tbxStartNum.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
                 rr.Close();
 
                 if(mqSrv==null)
@@ -243,13 +252,9 @@ namespace MQSender.Net
             }
 
 
-            string fileText = File.ReadAllText(this.tbxFileName.Text);
+            string fileText = File.ReadAllText(this.tbxFileName.Text,Encoding.GetEncoding("GBK"));
 
-            string sign = signature.HashAndSign(fileText);
-            
-            string tmp=fileText.Insert(int.Parse(this.tbxSignOffset.Text), sign);            
-
-            File.WriteAllText(this.tbxFileName.Text, tmp);
+            File.WriteAllText(this.tbxFileName.Text, SignString(fileText),Encoding.GetEncoding("GBK"));
 
             MessageBox.Show("加签成功");
             
@@ -264,6 +269,95 @@ namespace MQSender.Net
             {
                 this.tbxCrtPath.Text = dialog.FileName;
             }
+        }
+
+        private void button9_Click(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists(this.tbxFileName.Text))
+            {
+                MessageBox.Show("文件不存在！");
+                return;
+            }
+
+            if (String.IsNullOrEmpty(this.tbxSignLength.Text) || String.IsNullOrEmpty(this.tbxSignOffset.Text) || String.IsNullOrEmpty(this.tbxVerifyOffset.Text))
+            {
+                MessageBox.Show("请填写加核签偏移值相关字段");
+                return;
+            }
+
+
+            string fileText = File.ReadAllText(this.tbxFileName.Text, Encoding.GetEncoding("GBK"));
+
+            int startIndex = int.Parse(this.tbxVerifyOffset.Text);
+            int index = int.Parse(this.tbxSignOffset.Text);
+            int length = int.Parse(this.tbxSignLength.Text);
+
+            string signedDate = fileText.Substring(index, length).Trim();
+
+            bool isSucess = signature.VerifySigned(fileText.Substring(startIndex),signedDate);
+
+            if (isSucess)
+            {
+                MessageBox.Show("验签成功");
+            }
+            else
+            {
+                MessageBox.Show("验签失败");
+            }
+        }
+
+        private void button12_Click(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists(this.tbxFileName.Text))
+            {
+                MessageBox.Show("文件不存在！");
+                return;
+            }
+            if (string.IsNullOrEmpty(tbxStartNum.Text) || string.IsNullOrEmpty(tbxSendCount.Text) || string.IsNullOrEmpty(tbxNumString.Text))
+            {
+                MessageBox.Show("请填写批量发送相关字段");
+                return;
+            }
+
+            string msg = File.ReadAllText(this.tbxFileName.Text, Encoding.GetEncoding("GBK"));
+            if (!msg.Contains(this.tbxNumString.Text))
+            {
+                MessageBox.Show("序号字符串未出现");
+                return;
+            }
+            int count = int.Parse(this.tbxSendCount.Text);
+            int startnum = int.Parse(this.tbxStartNum.Text);
+
+            for (int i = 0; i < count; ++i)
+            {
+                this.lblCurNum.Content = startnum.ToString();
+
+                msg = msg.Replace(this.tbxNumString.Text, startnum++.ToString());
+                msg = SignString(msg);
+                mqSrv.PutMessage(msg);
+
+                this.prbSendProgress.Value = i / count * 100;
+            }
+            
+            
+            MessageBox.Show("发送成功！");
+        }
+
+        private string SignString(string orgDate)
+        {
+            int startIndex = int.Parse(this.tbxVerifyOffset.Text);
+            string sign = signature.HashAndSign(orgDate.Substring(startIndex));
+
+            StringBuilder sb = new StringBuilder(orgDate);
+            int index = int.Parse(this.tbxSignOffset.Text);
+            int length = int.Parse(this.tbxSignLength.Text);
+            sign += new string(' ', length - sign.Length);//空格填充
+            for (int i = 0; i < length; ++i)
+            {
+                sb[index++] = sign[i];
+            }
+
+            return sb.ToString();
         }
     }
 }
