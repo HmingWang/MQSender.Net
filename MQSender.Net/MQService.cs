@@ -41,19 +41,24 @@ namespace MQSender.Net
             MQEnvironment.UserId = string.IsNullOrEmpty(userid) ? null : userid; 
 
             mqQMgr = new MQQueueManager(qmgrname);
-            mqQueue = mqQMgr.AccessQueue(queuename, MQC.MQOO_OUTPUT | MQC.MQOO_INPUT_SHARED | MQC.MQOO_INQUIRE);
+            mqQueue = mqQMgr.AccessQueue(queuename, MQC.MQOO_OUTPUT|MQC.MQOO_FAIL_IF_QUIESCING );
             isConnected = true;
         }
 
-        public void PutMessage(string msg)
+        public void Commit()
+        {
+            mqQMgr.Commit();
+        }
+
+        public void PutMessage(byte[] msg)
         {
             if (!isConnected)
             {
                 Init();
             }
             mqMsg = new MQMessage();
-            mqMsg.WriteString(msg);
-            mqMsg.Format = MQC.MQFMT_STRING;
+            mqMsg.Write(msg);
+            mqMsg.MessageType = MQC.MQMT_DATAGRAM;          
             mqPutMsgOpts = new MQPutMessageOptions();
 
             mqQueue.Put(mqMsg, mqPutMsgOpts);

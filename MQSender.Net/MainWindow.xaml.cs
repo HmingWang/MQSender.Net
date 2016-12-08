@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using System.Resources;
 using System.IO;
+using System.Windows.Threading;
 
 namespace MQSender.Net
 {
@@ -57,7 +58,8 @@ namespace MQSender.Net
         {
             try
             {
-                mqSrv.PutMessage(this.tbxMsg.Text);
+                mqSrv.PutMessage(Encoding.GetEncoding("GBK").GetBytes( this.tbxMsg.Text));
+                mqSrv.Commit();
                 MessageBox.Show("发生成功");
             }
             catch (Exception ex)
@@ -100,6 +102,7 @@ namespace MQSender.Net
             rw.AddResource("SendCount", this.tbxSendCount.Text);
             rw.AddResource("NumString", this.tbxNumString.Text);
             rw.AddResource("StartNum", this.tbxStartNum.Text);
+            rw.AddResource("FileName", this.tbxFileName.Text);
             rw.Generate();
             rw.Close();
         }
@@ -143,6 +146,8 @@ namespace MQSender.Net
                 this.tbxNumString.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
                 rr.GetResourceData("StartNum", out type, out byteTmp);
                 this.tbxStartNum.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
+                rr.GetResourceData("FileName", out type, out byteTmp);
+                this.tbxFileName.Text = new BinaryReader(new MemoryStream(byteTmp)).ReadString();
                 rr.Close();
 
                 if(mqSrv==null)
@@ -185,10 +190,8 @@ namespace MQSender.Net
                 return;
             }
 
-            FileStream fs = File.OpenRead(this.tbxFileName.Text);
-            byte[] byteMessage = new Byte[fs.Length];
-            fs.Read(byteMessage, 0,(int)fs.Length);
-            mqSrv.PutMessage(Encoding.Default.GetString(byteMessage));
+            byte[] byteMessage = File.ReadAllBytes(this.tbxFileName.Text);
+            mqSrv.PutMessage(byteMessage);
             MessageBox.Show("发送成功！");
         }
 
@@ -252,9 +255,9 @@ namespace MQSender.Net
             }
 
 
-            string fileText = File.ReadAllText(this.tbxFileName.Text,Encoding.GetEncoding("GBK"));
+            byte[] fileText = File.ReadAllBytes(this.tbxFileName.Text);
 
-            File.WriteAllText(this.tbxFileName.Text, SignString(fileText),Encoding.GetEncoding("GBK"));
+            File.WriteAllBytes(this.tbxFileName.Text, SignString(fileText));
 
             MessageBox.Show("加签成功");
             
@@ -287,14 +290,16 @@ namespace MQSender.Net
 
 
             string fileText = File.ReadAllText(this.tbxFileName.Text, Encoding.GetEncoding("GBK"));
+            
 
             int startIndex = int.Parse(this.tbxVerifyOffset.Text);
             int index = int.Parse(this.tbxSignOffset.Text);
             int length = int.Parse(this.tbxSignLength.Text);
 
+            byte[] fileBytes = File.ReadAllBytes(this.tbxFileName.Text).Skip(startIndex).ToArray();
             string signedDate = fileText.Substring(index, length).Trim();
 
-            bool isSucess = signature.VerifySigned(fileText.Substring(startIndex),signedDate);
+            bool isSucess = signature.VerifySigned(fileBytes, signedDate);
 
             if (isSucess)
             {
@@ -320,6 +325,7 @@ namespace MQSender.Net
             }
 
             string msg = File.ReadAllText(this.tbxFileName.Text, Encoding.GetEncoding("GBK"));
+            byte[] bytesData = File.ReadAllBytes(this.tbxFileName.Text);
             if (!msg.Contains(this.tbxNumString.Text))
             {
                 MessageBox.Show("序号字符串未出现");
@@ -332,32 +338,53 @@ namespace MQSender.Net
             {
                 this.lblCurNum.Content = startnum.ToString();
 
-                msg = msg.Replace(this.tbxNumString.Text, startnum++.ToString());
-                msg = SignString(msg);
-                mqSrv.PutMessage(msg);
+                bytesData = Encoding.GetEncoding("GBK").GetBytes(msg.Replace(this.tbxNumString.Text, startnum++.ToString()));
+                bytesData = SignString(bytesData);
+                mqSrv.PutMessage(bytesData);
 
-                this.prbSendProgress.Value = i / count * 100;
+                this.prbSendProgress.Value = Convert.ToDouble(i) / count * 100;
+                this.lblPersent.Content = (Convert.ToDouble(i) / count * 100.0).ToString() + "%";
+
+                DoEvents();
             }
+
+            this.prbSendProgress.Value = 100;
+            this.lblPersent.Content = "100%";
             
-            
+
             MessageBox.Show("发送成功！");
         }
 
-        private string SignString(string orgDate)
+        private byte[] SignString(byte[] orgDate)
         {
             int startIndex = int.Parse(this.tbxVerifyOffset.Text);
-            string sign = signature.HashAndSign(orgDate.Substring(startIndex));
+            string sign = signature.HashAndSign(orgDate.Skip(startIndex).ToArray());
 
-            StringBuilder sb = new StringBuilder(orgDate);
+            byte[] sb = orgDate;
+
             int index = int.Parse(this.tbxSignOffset.Text);
             int length = int.Parse(this.tbxSignLength.Text);
             sign += new string(' ', length - sign.Length);//空格填充
             for (int i = 0; i < length; ++i)
             {
-                sb[index++] = sign[i];
+                sb[index++] = (byte)sign[i];
             }
 
-            return sb.ToString();
+            return sb;
+        }
+
+        public void DoEvents()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
+                new DispatcherOperationCallback(delegate (object f)
+                {
+                    ((DispatcherFrame)f).Continue = false;
+
+                    return null;
+                }
+                    ), frame);
+            Dispatcher.PushFrame(frame);
         }
     }
 }

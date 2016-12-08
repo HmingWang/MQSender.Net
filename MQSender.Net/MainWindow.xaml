@@ -51,7 +51,7 @@
         <TextBox x:Name="tbxStartNum" HorizontalAlignment="Left" Height="23" Margin="376,287,0,0"  Text="" VerticalAlignment="Top" Width="120"/>
         <ProgressBar x:Name="prbSendProgress" HorizontalAlignment="Left" Height="10" Margin="73,325,0,0" VerticalAlignment="Top" Width="394" Value="12"/>
         <Label x:Name="label17" Content="发送进度" HorizontalAlignment="Left" Margin="10,317,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label18" Content="100%" HorizontalAlignment="Left" Margin="472,317,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblPersent" Content="100%" HorizontalAlignment="Left" Margin="472,317,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label19" Content="数字证书" HorizontalAlignment="Left" Margin="10,182,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxCrtPath" HorizontalAlignment="Left" Height="23" Margin="73,184,0,0"  Text="" VerticalAlignment="Top" Width="246"/>
         <Button x:Name="button10" Content="浏览..." HorizontalAlignment="Left" Margin="324,185,0,0" VerticalAlignment="Top" Width="75" Click="button10_Click"/>
@@ -59,7 +59,7 @@
         <Label x:Name="label20" Content="密码" HorizontalAlignment="Left" Margin="376,154,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxPwd" HorizontalAlignment="Left" Height="23" Margin="415,155,0,0"  Text="" VerticalAlignment="Top" Width="75"/>
         <Label x:Name="label13" Content="使用说明：&#xD;&#xA;签名起始位置：165&#xD;&#xA;签名长度：640&#xD;&#xA;验签起始位置：808" HorizontalAlignment="Left" Margin="559,26,0,0" VerticalAlignment="Top" Height="309" Width="117" Foreground="#FF1BB21B"/>
-        <Label x:Name="lblCurNum" Content="当前序号" HorizontalAlignment="Left" Margin="458,251,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblCurNum" Content="00000000" HorizontalAlignment="Left" Margin="444,251,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblCurNum_Copy" Content="当前序号" HorizontalAlignment="Left" Margin="386,251,0,0" VerticalAlignment="Top"/>
         <Button x:Name="button12" Content="批量发送" HorizontalAlignment="Left" Margin="224,221,0,0" VerticalAlignment="Top" Width="75" Click="button12_Click"/>
 
