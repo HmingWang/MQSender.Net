@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using System.Security;
 using System.Security.Cryptography;
@@ -42,7 +41,7 @@ namespace MQSender.Net
             string signStr = BytesToHexString(encryptedData);
             //string signStr = BitConverter.ToString(encryptedData).Replace("-","").ToLower();
             RSAalg.Clear();
-            RSAalg.Dispose();
+            //RSAalg.Dispose();
             return signStr;
         }
 
@@ -64,7 +63,7 @@ namespace MQSender.Net
             //bool isSuccess = RSAalg.VerifyData(dataToVerifyBytes, new SHA1CryptoServiceProvider(), signedDataBytes);
             bool isSuccess = RSAalg.VerifyData(dataToVerifyBytes, new MD5CryptoServiceProvider(), signedDataBytes);
             RSAalg.Clear();
-            RSAalg.Dispose();
+            //RSAalg.Dispose();
             return isSuccess;
         }
 

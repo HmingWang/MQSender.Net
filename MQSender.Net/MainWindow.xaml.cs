@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -75,7 +74,7 @@ namespace MQSender.Net
             {
                 mqSrv.GetMessage(out msg);
                 MessageBox.Show(msg);
-                Console.Out.WriteLineAsync(msg);
+                Console.Out.WriteLine(msg);
             }
             catch (Exception ex)
             {
@@ -358,7 +357,8 @@ namespace MQSender.Net
         private byte[] SignString(byte[] orgDate)
         {
             int startIndex = int.Parse(this.tbxVerifyOffset.Text);
-            string sign = signature.HashAndSign(orgDate.Skip(startIndex).ToArray());
+            byte[] date = orgDate.Skip(startIndex).ToArray();
+            string sign = signature.HashAndSign(date);
 
             byte[] sb = orgDate;
 
