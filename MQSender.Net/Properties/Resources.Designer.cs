@@ -59,5 +59,15 @@ namespace MQSender.Net.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] amqmdnet {
+            get {
+                object obj = ResourceManager.GetObject("amqmdnet", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
