@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MQSender.Net.View"
         mc:Ignorable="d"
-        Title="Main" Height="307.725" Width="475.751">
+        Title="超级发射器" Height="307.725" Width="475.751">
     <Grid>
-        <Menu HorizontalAlignment="Left" Height="19.528" VerticalAlignment="Top" Width="468"/>
+        <Menu HorizontalAlignment="Left" Height="19.528" VerticalAlignment="Top" Width="468">
+            <MenuItem Header="配置" Height="19.528" Width="40.773"/>
+        </Menu>
 
     </Grid>
 </Window>
