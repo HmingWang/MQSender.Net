@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace MQSender.Net.View
+namespace MQSender.Net.View.WinForm
 {
-    public partial class MainForm : Form
+    public partial class MQConfig: Form
     {
-        public MainForm()
+        public MQConfig()
         {
             InitializeComponent();
         }
