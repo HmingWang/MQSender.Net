@@ -40,13 +40,14 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "使用说明：\n签名起始位置：165\n签名长度：640\n验签起始位置：\n       808（银网通）\n       811（深金结）";
             // 
-            // 说明
+            // Notes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(159, 93);
             this.Controls.Add(this.label1);
-            this.Name = "说明";
+            this.Name = "Notes";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "说明";
             this.ResumeLayout(false);
             this.PerformLayout();

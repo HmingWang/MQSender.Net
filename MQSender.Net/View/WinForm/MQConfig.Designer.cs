@@ -36,13 +36,14 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.tbxPort = new System.Windows.Forms.TextBox();
+            this.tbxCCSID = new System.Windows.Forms.TextBox();
+            this.tbxUserId = new System.Windows.Forms.TextBox();
+            this.tbxQmgrName = new System.Windows.Forms.TextBox();
+            this.tbxQueueName = new System.Windows.Forms.TextBox();
+            this.tbxChannel = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -115,69 +116,81 @@
             this.label7.TabIndex = 7;
             this.label7.Text = "服务通道：";
             // 
-            // textBox1
+            // tbxPort
             // 
-            this.textBox1.Location = new System.Drawing.Point(95, 63);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
-            this.textBox1.TabIndex = 8;
+            this.tbxPort.Location = new System.Drawing.Point(95, 63);
+            this.tbxPort.Name = "tbxPort";
+            this.tbxPort.Size = new System.Drawing.Size(100, 21);
+            this.tbxPort.TabIndex = 8;
             // 
-            // textBox2
+            // tbxCCSID
             // 
-            this.textBox2.Location = new System.Drawing.Point(95, 97);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 21);
-            this.textBox2.TabIndex = 9;
+            this.tbxCCSID.Location = new System.Drawing.Point(95, 97);
+            this.tbxCCSID.Name = "tbxCCSID";
+            this.tbxCCSID.Size = new System.Drawing.Size(100, 21);
+            this.tbxCCSID.TabIndex = 9;
             // 
-            // textBox3
+            // tbxUserId
             // 
-            this.textBox3.Location = new System.Drawing.Point(95, 131);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 21);
-            this.textBox3.TabIndex = 10;
+            this.tbxUserId.Location = new System.Drawing.Point(95, 131);
+            this.tbxUserId.Name = "tbxUserId";
+            this.tbxUserId.Size = new System.Drawing.Size(100, 21);
+            this.tbxUserId.TabIndex = 10;
             // 
-            // textBox4
+            // tbxQmgrName
             // 
-            this.textBox4.Location = new System.Drawing.Point(95, 165);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 21);
-            this.textBox4.TabIndex = 11;
+            this.tbxQmgrName.Location = new System.Drawing.Point(95, 165);
+            this.tbxQmgrName.Name = "tbxQmgrName";
+            this.tbxQmgrName.Size = new System.Drawing.Size(100, 21);
+            this.tbxQmgrName.TabIndex = 11;
             // 
-            // textBox5
+            // tbxQueueName
             // 
-            this.textBox5.Location = new System.Drawing.Point(95, 199);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 21);
-            this.textBox5.TabIndex = 12;
+            this.tbxQueueName.Location = new System.Drawing.Point(95, 199);
+            this.tbxQueueName.Name = "tbxQueueName";
+            this.tbxQueueName.Size = new System.Drawing.Size(100, 21);
+            this.tbxQueueName.TabIndex = 12;
             // 
-            // textBox6
+            // tbxChannel
             // 
-            this.textBox6.Location = new System.Drawing.Point(95, 233);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 21);
-            this.textBox6.TabIndex = 13;
+            this.tbxChannel.Location = new System.Drawing.Point(95, 233);
+            this.tbxChannel.Name = "tbxChannel";
+            this.tbxChannel.Size = new System.Drawing.Size(100, 21);
+            this.tbxChannel.TabIndex = 13;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(73, 293);
+            this.button1.Location = new System.Drawing.Point(38, 293);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 14;
             this.button1.Text = "测试连接";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(119, 293);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 15;
+            this.button2.Text = "保存配置";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // MQConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(231, 328);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox6);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.tbxChannel);
+            this.Controls.Add(this.tbxQueueName);
+            this.Controls.Add(this.tbxQmgrName);
+            this.Controls.Add(this.tbxUserId);
+            this.Controls.Add(this.tbxCCSID);
+            this.Controls.Add(this.tbxPort);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -187,7 +200,9 @@
             this.Controls.Add(this.tbxHostName);
             this.Controls.Add(this.label1);
             this.Name = "MQConfig";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MQConfig";
+            this.Load += new System.EventHandler(this.MQConfig_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,12 +218,13 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox tbxPort;
+        private System.Windows.Forms.TextBox tbxCCSID;
+        private System.Windows.Forms.TextBox tbxUserId;
+        private System.Windows.Forms.TextBox tbxQmgrName;
+        private System.Windows.Forms.TextBox tbxQueueName;
+        private System.Windows.Forms.TextBox tbxChannel;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }

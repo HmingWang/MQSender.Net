@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MQSender.Net"
         mc:Ignorable="d"
-        Title="MainWindow" Height="387.019" Width="676.68" Loaded="Window_Loaded" ResizeMode="NoResize">
+        Title="超级发射器" Height="387.019" Width="676.68" Loaded="Window_Loaded" ResizeMode="NoResize">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Button x:Name="button" Content="测试连接" HorizontalAlignment="Left" Margin="9,71,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
         <Label x:Name="label" Content="IP地址" HorizontalAlignment="Left" Margin="9,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxHostName" HorizontalAlignment="Left" Height="23" Margin="59,11,0,0" Text="" VerticalAlignment="Top" Width="120"/>
