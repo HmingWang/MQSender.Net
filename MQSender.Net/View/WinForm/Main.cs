@@ -71,5 +71,12 @@ namespace MQSender.Net.View
         {
 
         }
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Nodes.Count > 0) return;
+            StreamReader sr = File.OpenText(e.Node.Tag.ToString());
+            richTextBox1.Text = sr.ReadToEnd();
+        }
     }
 }
