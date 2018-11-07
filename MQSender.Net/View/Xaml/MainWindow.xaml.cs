@@ -45,7 +45,7 @@ namespace MQSender.Net
         private Signature signature;
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            if (mqSrv == null)
+            if(mqSrv==null)
                 mqSrv = new MQService();
 
             mqSrv.Hostname = this.tbxHostName.Text;
@@ -87,6 +87,7 @@ namespace MQSender.Net
             try
             {
                 mqSrv.GetMessage(out msg);
+                mqSrv.Commit();
                 MessageBox.Show(msg);
                 Console.Out.WriteLine(msg);
             }
@@ -204,8 +205,14 @@ namespace MQSender.Net
             }
 
             byte[] byteMessage = File.ReadAllBytes(this.tbxFileName.Text);
-            mqSrv.PutMessage(byteMessage);
-            MessageBox.Show("发送成功！");
+            try
+            {
+                mqSrv.PutMessage(byteMessage);
+                MessageBox.Show("发送成功！");
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button5_Click(object sender, RoutedEventArgs e)
@@ -326,41 +333,48 @@ namespace MQSender.Net
 
         private void button12_Click(object sender, RoutedEventArgs e)
         {
+            bool isReplace = false;
+            bool isSign = this.cbxSign.IsChecked.GetValueOrDefault() ;
             if (!File.Exists(this.tbxFileName.Text))
             {
                 MessageBox.Show("文件不存在！");
                 return;
             }
-            if (string.IsNullOrEmpty(tbxStartNum.Text) || string.IsNullOrEmpty(tbxSendCount.Text) || string.IsNullOrEmpty(tbxNumString.Text))
+            if (string.IsNullOrEmpty(tbxSendCount.Text))
             {
-                MessageBox.Show("请填写批量发送相关字段");
+                MessageBox.Show("请填写批量发送次数");
                 return;
             }
-
             string msg = File.ReadAllText(this.tbxFileName.Text, Encoding.GetEncoding("GBK"));
             byte[] bytesData = File.ReadAllBytes(this.tbxFileName.Text);
-            if (!msg.Contains(this.tbxNumString.Text))
+            int startnum = 0;
+            if (!string.IsNullOrEmpty(tbxNumString.Text) && !string.IsNullOrEmpty(tbxStartNum.Text))
             {
-                MessageBox.Show("序号字符串未出现");
-                return;
+                if (!msg.Contains(this.tbxNumString.Text))
+                {
+                    MessageBox.Show("序号字符串未出现");
+                    return;
+                }
+                isReplace = true;
+                startnum = int.Parse(this.tbxStartNum.Text);
             }
             int count = int.Parse(this.tbxSendCount.Text);
-            int startnum = int.Parse(this.tbxStartNum.Text);
+            
 
             for (int i = 0; i < count; ++i)
             {
                 this.lblCurNum.Content = startnum.ToString();
 
-                bytesData = Encoding.GetEncoding("GBK").GetBytes(msg.Replace(this.tbxNumString.Text, startnum++.ToString()));
-                bytesData = SignString(bytesData);
+                bytesData = Encoding.GetEncoding("GBK").GetBytes(isReplace?msg.Replace(this.tbxNumString.Text, startnum++.ToString()):msg);
+                if(isSign) bytesData = SignString(bytesData);
                 mqSrv.PutMessage(bytesData);
 
                 this.prbSendProgress.Value = Convert.ToDouble(i) / count * 100;
-                this.lblPersent.Content = (Convert.ToDouble(i) / count * 100.0).ToString() + "%";
+                this.lblPersent.Content = (Math.Round(Convert.ToDouble(i) / count * 100.0,2)).ToString() + "%";
 
                 DoEvents();
             }
-
+            mqSrv.Commit();
             this.prbSendProgress.Value = 100;
             this.lblPersent.Content = "100%";
             
@@ -399,6 +413,11 @@ namespace MQSender.Net
                 }
                     ), frame);
             Dispatcher.PushFrame(frame);
+        }
+
+        private void button_Copy_Click(object sender, RoutedEventArgs e)
+        {
+            this.mqSrv = null;
         }
     }
 }

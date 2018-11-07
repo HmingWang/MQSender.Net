@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>MQSender.Net.Program</StartupObject>
+    <StartupObject>MQSender.Net.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="amqmdnet, Version=9.0.0.0, Culture=neutral, PublicKeyToken=dd3cb1c9aae9ec97, processorArchitecture=MSIL">

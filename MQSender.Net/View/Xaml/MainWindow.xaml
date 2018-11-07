@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MQSender.Net"
         mc:Ignorable="d"
-        Title="超级发射器" Height="387.019" Width="676.68" Loaded="Window_Loaded" ResizeMode="NoResize">
+        Title="超级发射器" Height="380.748" Width="648.907" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -13,24 +13,24 @@
         <Button x:Name="button" Content="测试连接" HorizontalAlignment="Left" Margin="9,71,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
         <Label x:Name="label" Content="IP地址" HorizontalAlignment="Left" Margin="9,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxHostName" HorizontalAlignment="Left" Height="23" Margin="59,11,0,0" Text="" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="label1" Content="端口" HorizontalAlignment="Left" Margin="184,9,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label1" Content="端口" HorizontalAlignment="Left" Margin="184,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxPort" HorizontalAlignment="Left" Height="23" Margin="223,11,0,0" Text="1414" VerticalAlignment="Top" Width="44"/>
         <Label x:Name="label2" Content="CCSID" HorizontalAlignment="Left" Margin="274,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxCCSID" HorizontalAlignment="Left" Height="23" Margin="325,11,0,0" Text="1381" VerticalAlignment="Top" Width="55"/>
-        <Label x:Name="label3" Content="队列管理器名称" HorizontalAlignment="Left" Margin="9,41,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3" Content="队列管理器名称" HorizontalAlignment="Left" Margin="9,42,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxQmgrName" HorizontalAlignment="Left" Height="23" Margin="108,43,0,0" Text="" VerticalAlignment="Top" Width="88"/>
-        <Label x:Name="label4" Content="队列名称" HorizontalAlignment="Left" Margin="201,41,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.13,0.518"/>
+        <Label x:Name="label4" Content="队列名称" HorizontalAlignment="Left" Margin="201,42,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.13,0.518"/>
         <TextBox x:Name="tbxQueueName" HorizontalAlignment="Left" Height="23" Margin="264,43,0,0" Text="" VerticalAlignment="Top" Width="71"/>
-        <Label x:Name="label5" Content="管理通道名称" HorizontalAlignment="Left" Margin="340,40,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label5" Content="管理通道名称" HorizontalAlignment="Left" Margin="340,42,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxChannel" HorizontalAlignment="Left" Height="23" Margin="427,43,0,0" Text="" VerticalAlignment="Top" Width="79"/>
         <Label x:Name="label6" Content="用户名" HorizontalAlignment="Left" Margin="385,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="tbxUserId" HorizontalAlignment="Left" Height="23" Margin="436,10,0,0" Text="" VerticalAlignment="Top" Width="70"/>
+        <TextBox x:Name="tbxUserId" HorizontalAlignment="Left" Height="23" Margin="436,11,0,0" Text="" VerticalAlignment="Top" Width="70"/>
         <Label x:Name="label7" Content="发送消息" HorizontalAlignment="Left" Margin="9,95,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxMsg" HorizontalAlignment="Left" Height="23" Margin="72,97,0,0" Text="" VerticalAlignment="Top" Width="246"/>
         <Button x:Name="button1" Content="发送" HorizontalAlignment="Left" Margin="323,97,0,0" VerticalAlignment="Top" Width="75" Click="button1_Click"/>
         <Button x:Name="button2" Content="读取" HorizontalAlignment="Left" Margin="403,97,0,0" VerticalAlignment="Top" Width="75" Click="button2_Click"/>
-        <Button x:Name="button3" Content="保存默认值" HorizontalAlignment="Left" Margin="89,71,0,0" Width="75" Click="button3_Click" VerticalAlignment="Top"/>
-        <Button x:Name="button4" Content="读取默认值" HorizontalAlignment="Left" Margin="169,71,0,0" VerticalAlignment="Top" Width="75" Click="button4_Click"/>
+        <Button x:Name="button3" Content="保存默认值" HorizontalAlignment="Left" Margin="183.08,71,0,0" Width="75" Click="button3_Click" VerticalAlignment="Top"/>
+        <Button x:Name="button4" Content="读取默认值" HorizontalAlignment="Left" Margin="263.976,71,0,0" VerticalAlignment="Top" Width="75" Click="button4_Click"/>
         <Label x:Name="label8" Content="发送文件" HorizontalAlignment="Left" Margin="9,125,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxFileName" HorizontalAlignment="Left" Height="23" Margin="72,125,0,0" Text="" VerticalAlignment="Top" Width="246"/>
         <Button x:Name="button6" Content="发送" HorizontalAlignment="Left" Margin="403,128,0,0" VerticalAlignment="Top" Width="75" Click="button6_Click"/>
@@ -61,10 +61,12 @@
         <Button x:Name="button11" Content="绑定" HorizontalAlignment="Left" Margin="403,185,0,0" VerticalAlignment="Top" Width="75" Click="button11_Click"/>
         <Label x:Name="label20" Content="密码" HorizontalAlignment="Left" Margin="375,154,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tbxPwd" HorizontalAlignment="Left" Height="23" Margin="414,155,0,0"  Text="" VerticalAlignment="Top" Width="75"/>
-        <Label x:Name="label13" Content="使用说明：&#xA;签名起始位置：165&#xA;签名长度：640&#xA;验签起始位置：&#xA;       808（银网通）&#xA;       811（深金结）" HorizontalAlignment="Left" Margin="537,0,0,0" VerticalAlignment="Top" Height="340" Width="117" Foreground="#FF1BB21B"/>
+        <Label x:Name="label13" Content="使用说明：&#xA;签名起始位置：165&#xA;签名长度：640&#xA;验签起始位置：&#xA;       808（银网通）&#xA;       811（深金结）" HorizontalAlignment="Left" Margin="518,0,0,0" VerticalAlignment="Top" Height="340" Width="117" Foreground="#FF1BB21B"/>
         <Label x:Name="lblCurNum" Content="00000000" HorizontalAlignment="Left" Margin="443,251,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblCurNum_Copy" Content="当前序号" HorizontalAlignment="Left" Margin="385,251,0,0" VerticalAlignment="Top"/>
         <Button x:Name="button12" Content="批量发送" HorizontalAlignment="Left" Margin="223,221,0,0" VerticalAlignment="Top" Width="75" Click="button12_Click"/>
+        <CheckBox x:Name="cbxSign" Content="加签" HorizontalAlignment="Left" Margin="312,224,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button_Copy" Content="断开连接" HorizontalAlignment="Left" Margin="92.328,71,0,0" VerticalAlignment="Top" Width="75" Click="button_Copy_Click"/>
 
     </Grid>
 </Window>
